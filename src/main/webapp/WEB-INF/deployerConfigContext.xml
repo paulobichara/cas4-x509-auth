@@ -49,15 +49,15 @@
 
 	<bean id="x509AuthenticationHandler"
 	      class="org.jasig.cas.adaptors.x509.authentication.handler.support.X509CredentialsAuthenticationHandler"
-	      p:trustedIssuerDnPattern="CN=(DEV )*Virginia Tech [A-Za-z ]*User CA.*"
+	      p:trustedIssuerDnPattern=".+CN=localhost.+"
 	      p:maxPathLength="2147483647"
 	      p:maxPathLengthAllowUnspecified="true"
-	      p:checkKeyUsage="true"
+	      p:checkKeyUsage="false"
 	      p:requireKeyUsage="true" />
 
 	<bean id="x509PrincipalResolver"
     	  class="org.jasig.cas.adaptors.x509.authentication.principal.X509SubjectPrincipalResolver"
-    	  p:descriptor="$UID" />
+    	  p:descriptor="$CN" />
 
     <!-- Required for proxy ticket mechanism. -->
     <bean id="proxyAuthenticationHandler"

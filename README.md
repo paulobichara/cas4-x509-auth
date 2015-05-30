@@ -3,10 +3,12 @@
 SSL Steps
 
 openssl genrsa -out tomcat.key 2048
-openssl req -new -key tomcat.key -out tomcat.csr
-openssl x509 -req -in tomcat.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out tomcat.crt -days 500
-openssl pkcs12 -export -in tomcat.crt -inkey tomcat.key -out tomcat.p12 -name tomcat -CAfile ca.pem -caname root -chain
 
+openssl req -new -key tomcat.key -out tomcat.csr
+
+openssl x509 -req -in tomcat.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out tomcat.crt -days 500
+
+openssl pkcs12 -export -in tomcat.crt -inkey tomcat.key -out tomcat.p12 -name tomcat -CAfile ca.pem -caname root -chain
 
 keytool -importkeystore -srckeystore tomcat.p12 -srcstoretype pkcs12 -srcalias tomcat -destkeystore tomcat.jks -deststoretype jks -deststorepass changeit -destalias tomcat
 

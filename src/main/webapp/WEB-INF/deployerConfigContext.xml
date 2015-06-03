@@ -49,7 +49,7 @@
 
 	<bean id="x509AuthenticationHandler"
 	      class="org.jasig.cas.adaptors.x509.authentication.handler.support.X509CredentialsAuthenticationHandler"
-	      p:trustedIssuerDnPattern=".+CN=localhost.+"
+	      p:trustedIssuerDnPattern=".+CN=My Root CA.+"
 	      p:maxPathLength="2147483647"
 	      p:maxPathLengthAllowUnspecified="true"
 	      p:checkKeyUsage="false"

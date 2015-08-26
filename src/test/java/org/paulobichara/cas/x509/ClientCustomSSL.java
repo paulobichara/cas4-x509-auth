@@ -26,63 +26,63 @@ import org.apache.http.util.EntityUtils;
  * context.
  */
 public class ClientCustomSSL {
-	
+
 	private CloseableHttpClient httpclient;
-	
+
 	private static final String CAS_LOGIN_URL = "https://localhost:8443/cas/login";
 	private static final File TRUSTSTORE_FILE = new File("[PATH_TO_TRUSTSTORE]");
 	private static final String TRUSTSTORE_PASS = "[TRUSTSTOREPASS]";
 	private static final File KEYSTORE_FILE = new File("[PATH_TO_KEYSTORE]");
 	private static final String KEYSTORE_PASS = "[KEYSTOREPASS]";
-	
+
 	public void initClientSession() throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
-        // Trust own CA and all self-signed certs
-        SSLContext sslcontext = SSLContexts.custom()
-                .loadTrustMaterial(TRUSTSTORE_FILE, TRUSTSTORE_PASS.toCharArray(),
-                        new TrustSelfSignedStrategy())
-                .loadKeyMaterial(KEYSTORE_FILE, KEYSTORE_PASS.toCharArray(), KEYSTORE_PASS.toCharArray())
-                .build();
-        // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-                sslcontext,
-                new String[] { "TLSv1" },
-                null,
-                SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-        this.httpclient = HttpClients.custom()
-                .setSSLSocketFactory(sslsf)
-                .build();
+		// Trust own CA and all self-signed certs
+		SSLContext sslcontext = SSLContexts.custom()
+				.loadTrustMaterial(TRUSTSTORE_FILE, TRUSTSTORE_PASS.toCharArray(),
+						new TrustSelfSignedStrategy())
+						.loadKeyMaterial(KEYSTORE_FILE, KEYSTORE_PASS.toCharArray(), KEYSTORE_PASS.toCharArray())
+						.build();
+		// Allow TLSv1 protocol only
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+				sslcontext,
+				new String[] { "TLSv1" },
+				null,
+				SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+		this.httpclient = HttpClients.custom()
+				.setSSLSocketFactory(sslsf)
+				.build();
 	}
-	
+
 	public void closeClientSession() throws IOException {
 		this.httpclient.close();
 	}
-	
+
 	public void sendSimpleGetRequest(String url) throws ClientProtocolException, IOException {
-        HttpGet httpget = new HttpGet(url);
+		HttpGet httpget = new HttpGet(url);
 
-        System.out.println("executing request " + httpget.getRequestLine());
+		System.out.println("executing request " + httpget.getRequestLine());
 
-        CloseableHttpResponse response = this.httpclient.execute(httpget);
-        try {
-            HttpEntity entity = response.getEntity();
+		CloseableHttpResponse response = this.httpclient.execute(httpget);
+		try {
+			HttpEntity entity = response.getEntity();
 
-            System.out.println("----------------------------------------");
-            System.out.println(response.getStatusLine());
-            EntityUtils.consume(entity);
-        } finally {
-            response.close();
-        }		
+			System.out.println("----------------------------------------");
+			System.out.println(response.getStatusLine());
+			EntityUtils.consume(entity);
+		} finally {
+			response.close();
+		}		
 	}
 
-    public final static void main(String[] args) throws Exception {
-    	ClientCustomSSL client = new ClientCustomSSL();
-        try {
-        	client.initClientSession();
-        	client.sendSimpleGetRequest(CAS_LOGIN_URL);
-        	client.sendSimpleGetRequest(CAS_LOGIN_URL);        	
-        } finally {
-            client.closeClientSession();
-        }
-    }
+	public final static void main(String[] args) throws Exception {
+		ClientCustomSSL client = new ClientCustomSSL();
+		try {
+			client.initClientSession();
+			client.sendSimpleGetRequest(CAS_LOGIN_URL);
+			client.sendSimpleGetRequest(CAS_LOGIN_URL);        	
+		} finally {
+			client.closeClientSession();
+		}
+	}
 
 }
